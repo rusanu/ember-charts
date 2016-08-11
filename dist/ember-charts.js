@@ -2290,11 +2290,9 @@ define('ember-charts/components/scatter-chart', ['exports', 'module', 'ember', '
         d3.select(element).classed('hovered', true);
         var formatXValue = _this4.get('formatXValue');
         var formatYValue = _this4.get('formatYValue');
-        var content = "<span class=\"tip-label\">" + data.group + "</span>";
-        content += "<span class=\"name\">" + _this4.get('xValueDisplayName') + ": </span>";
-        content += "<span class=\"value\">" + formatXValue(data.xValue) + "</span><br/>";
-        content += "<span class=\"name\">" + _this4.get('yValueDisplayName') + ": </span>";
-        content += "<span class=\"value\">" + formatYValue(data.yValue) + "</span>";
+        var xValueDisplayName = $("<br /><span class=\"name\" />").text(_this4.get('xValueDisplayName') + ": ");
+        var yValueDisplayName = $("<span class=\"name\" />").text(_this4.get('yValueDisplayName') + ": ");
+        var content = $("<span class=\"tip-label\" />").text(data.group).append(xValueDisplayName).append("<span class=\"value\">" + formatXValue(data.xValue) + "</span><br/>").append(yValueDisplayName).append("<span class=\"value\">" + formatYValue(data.yValue) + "</span>");
 
         return _this4.showTooltip(content, d3.event);
       };
@@ -6036,8 +6034,7 @@ define('ember-charts/templates/components/chart-component', ['exports', 'module'
 
   var _Ember = _interopRequireDefault(_ember);
 
-  module.exports = _Ember['default'].Handlebars.template(function anonymous(Handlebars, depth0, helpers, partials, data
-  /**/) {
+  module.exports = _Ember['default'].Handlebars.template(function anonymous(Handlebars, depth0, helpers, partials, data) {
     this.compilerInfo = [4, '>= 1.0.0'];
     helpers = this.merge(helpers, _Ember['default'].Handlebars.helpers);data = data || {};
     var buffer = '',
