@@ -2290,11 +2290,14 @@ define('ember-charts/components/scatter-chart', ['exports', 'module', 'ember', '
         d3.select(element).classed('hovered', true);
         var formatXValue = _this4.get('formatXValue');
         var formatYValue = _this4.get('formatYValue');
-        var xValueDisplayName = $("<br /><span class=\"name\" />").text(_this4.get('xValueDisplayName') + ": ");
-        var yValueDisplayName = $("<span class=\"name\" />").text(_this4.get('yValueDisplayName') + ": ");
-        var content = $("<span class=\"tip-label\" />").text(data.group).append(xValueDisplayName).append("<span class=\"value\">" + formatXValue(data.xValue) + "</span><br/>").append(yValueDisplayName).append("<span class=\"value\">" + formatYValue(data.yValue) + "</span>");
+        var xValueDisplayName = $('<span class="name" />').text(_this4.get('xValueDisplayName') + ': ');
+        var yValueDisplayName = $('<span class="name" />').text(_this4.get('yValueDisplayName') + ': ');
+        var xValue = $('<span class="value" />').text(formatXValue(data.xValue));
+        var yValue = $('<span class="value" />').text(formatYValue(data.yValue));
 
-        return _this4.showTooltip(content, d3.event);
+        var content = $('<span />');
+        content.append($('<span class="tip-label" />').text(data.group)).append(xValueDisplayName).append(xValue).append('<br />').append(yValueDisplayName).append(yValue);
+        _this4.showTooltip(content.html(), d3.event);
       };
     }),
 
@@ -3007,9 +3010,11 @@ define('ember-charts/components/time-series-chart', ['exports', 'module', 'ember
         var formatLabelFunction = _this4.get('formatLabelFunction');
 
         var addValueLine = function addValueLine(d) {
-          var name = $("<span class=\"name\" />").text(d.group + ": ");
+          var name = $('<span class="name" />').text(d.group + ': ');
+          var value = $('<span class="value" />').text(formatLabelFunction(d.value));
           content.append(name);
-          return content.append("<span class=\"value\">" + formatLabelFunction(d.value) + "</span><br/>");
+          content.append(value);
+          content.append('<br />');
         };
 
         if (_Ember['default'].isArray(data.values)) {
@@ -5229,17 +5234,24 @@ define('ember-charts/mixins/legend', ['exports', 'module', 'ember', '../utils/la
         if (data.selector) {
           _this.get('viewport').selectAll(data.selector).classed('hovered', true);
         }
+
         var content = $("<span />");
-        content.append("<span class=\"tip-label\">").text(data.label);
-        if (data.xValue != null) {
+        content.append($("<span class=\"tip-label\">").text(data.label));
+        if (!_Ember['default'].isNone(data.xValue)) {
           var formatXValue = _this.get('formatXValue');
-          var formatYValue = _this.get('formatYValue');
-          content.append("<span class=\"name\">").text(_this.get('tooltipXValueDisplayName'));
-          content.append("<span class=\"value\">" + formatXValue(data.xValue) + "</span><br/>");
-          content.append("<span class=\"name\">").text(_this.get('tooltipYValueDisplayName'));
-          content.append("<span class=\"value\">" + formatYValue(data.yValue) + "</span><br/>");
+          content.append($('<span class="name" />').text(_this.get('tooltipXValueDisplayName') + ': '));
+          content.append($('<span class="value" />').text(formatXValue(data.xValue)));
+          if (!_Ember['default'].isNone(data.yValue)) {
+            content.append('<br />');
+          }
         }
-        return _this.showTooltip(content.html(), d3.event);
+        if (!_Ember['default'].isNone(data.yValue)) {
+          var formatYValue = _this.get('formatYValue');
+          content.append($('<span class="name" />').text(_this.get('tooltipYValueDisplayName') + ': '));
+          content.append($('<span class="value" />').text(formatYValue(data.yValue)));
+        }
+
+        _this.showTooltip(content.html(), d3.event);
       };
     }),
 
@@ -6042,7 +6054,8 @@ define('ember-charts/templates/components/chart-component', ['exports', 'module'
 
   var _Ember = _interopRequireDefault(_ember);
 
-  module.exports = _Ember['default'].Handlebars.template(function anonymous(Handlebars, depth0, helpers, partials, data) {
+  module.exports = _Ember['default'].Handlebars.template(function anonymous(Handlebars, depth0, helpers, partials, data
+  /**/) {
     this.compilerInfo = [4, '>= 1.0.0'];
     helpers = this.merge(helpers, _Ember['default'].Handlebars.helpers);data = data || {};
     var buffer = '',
